@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_admob/firebase_admob.dart';
 
 void main() {
+  // Initialize AdMob
   FirebaseAdMob.instance
       .initialize(appId: 'ca-app-pub-3940256099942544~3347511713');
   runApp(MyApp());
@@ -12,7 +13,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Flutter + AdMob Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
@@ -82,15 +83,17 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: LayoutBuilder(builder: (context, constraint) {
-        /* zonble:
+        /*
+         * zonble:
          *
          * Actually the banner is not a Flutter widget but a native view above
          * the Flutter view, and we can only set the offset of banner, but not
          * to set its layout within a container.
          *
-         *  However, We can still use a layout builder here to know about the
-         *  height of the  region without the app bar, and then set the offset
-         *  of the admob view. */
+         * However, We can still use a layout builder here to know about the
+         * height of the  region without the app bar, and then set the offset
+         * of the admob view.
+         */
         var offset = MediaQuery.of(context).size.height - constraint.maxHeight;
         myBanner
           ..load()
