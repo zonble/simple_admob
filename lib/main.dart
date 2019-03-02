@@ -34,7 +34,8 @@ class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
 
   var myInterstitial;
-  var myBanner;
+  var myBanner1;
+  var myBanner2;
 
   @override
   void initState() {
@@ -49,7 +50,7 @@ class _MyHomePageState extends State<MyHomePage> {
       testDevices: <String>[], // Android emulators are considered test devices
     );
 
-    myBanner = BannerAd(
+    myBanner1 = BannerAd(
       adUnitId: BannerAd.testAdUnitId,
       size: AdSize.smartBanner,
       targetingInfo: targetingInfo,
@@ -58,16 +59,25 @@ class _MyHomePageState extends State<MyHomePage> {
       },
     );
 
-    myInterstitial = InterstitialAd(
-      // Replace the testAdUnitId with an ad unit id from the AdMob dash.
-      // https://developers.google.com/admob/android/test-ads
-      // https://developers.google.com/admob/ios/test-ads
-      adUnitId: InterstitialAd.testAdUnitId,
+    myBanner2 = BannerAd(
+      adUnitId: BannerAd.testAdUnitId,
+      size: AdSize.smartBanner,
       targetingInfo: targetingInfo,
       listener: (MobileAdEvent event) {
-        print("InterstitialAd event is $event");
+        print("BannerAd event is $event");
       },
     );
+
+//    myInterstitial = InterstitialAd(
+//      // Replace the testAdUnitId with an ad unit id from the AdMob dash.
+//      // https://developers.google.com/admob/android/test-ads
+//      // https://developers.google.com/admob/ios/test-ads
+//      adUnitId: InterstitialAd.testAdUnitId,
+//      targetingInfo: targetingInfo,
+//      listener: (MobileAdEvent event) {
+//        print("InterstitialAd event is $event");
+//      },
+//    );
   }
 
   void _incrementCounter() {
@@ -95,44 +105,67 @@ class _MyHomePageState extends State<MyHomePage> {
          * of the admob view.
          */
         var offset = MediaQuery.of(context).size.height - constraint.maxHeight;
-        myBanner
+        myBanner1
           ..load()
           ..show(
             anchorOffset: offset,
             anchorType: AnchorType.top,
           );
-        myInterstitial
-          ..load()
-          ..show(
-            anchorType: AnchorType.bottom,
-            anchorOffset: 0.0,
-          );
+//        myInterstitial
+//          ..load()
+//          ..show(
+//            anchorType: AnchorType.bottom,
+//            anchorOffset: 0.0,
+//          );
 
-        return buildCenter(context);
+        return Column(
+          children: <Widget>[
+            Expanded(child: LayoutBuilder(builder: (context, constraint2) {
+              var offset2 = constraint.maxHeight - constraint2.maxHeight;
+              myBanner2
+                ..load()
+                ..show(
+                  anchorOffset: offset2,
+                  anchorType: AnchorType.bottom,
+                );
+
+              return buildCenter(context);
+            })),
+            BottomNavigationBar(
+              items: [
+                BottomNavigationBarItem(
+                    icon: Icon(Icons.add), title: Text('1')),
+                BottomNavigationBarItem(icon: Icon(Icons.add), title: Text('2'))
+              ],
+            ),
+          ],
+        );
       }),
+    );
+    return scaffold;
+  }
+
+  Widget buildCenter(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              'You have pushed the button this many times:',
+            ),
+            Text(
+              '$_counter',
+              style: Theme.of(context).textTheme.display1,
+            ),
+          ],
+        ),
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: _incrementCounter,
         tooltip: 'Increment',
         child: Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
-    );
-    return scaffold;
-  }
-
-  Center buildCenter(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Text(
-            'You have pushed the button this many times:',
-          ),
-          Text(
-            '$_counter',
-            style: Theme.of(context).textTheme.display1,
-          ),
-        ],
-      ),
     );
   }
 }
